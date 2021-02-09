@@ -6,76 +6,62 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
+import { View } from 'react-native';
+import { ButtonGroup, Input } from 'react-native-elements';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  TextInput,
-} from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  ANNUAL_TO_THP,
+  ANNUAL_TO_THP_COPY,
+  THP_TO_ANNUAL_COPY,
+} from './constants';
 
 const App: () => React$Node = () => {
+  const [calculatorMode, setCalculatorMode] = useState(0);
+
+  const placeholderDecider = () => {
+    return calculatorMode === ANNUAL_TO_THP
+      ? ANNUAL_TO_THP_COPY
+      : THP_TO_ANNUAL_COPY;
+  };
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <TextInput />
-        </ScrollView>
+        <View style={styles.container}>
+          <ButtonGroup
+            onPress={setCalculatorMode}
+            selectedIndex={calculatorMode}
+            buttons={['Annual/Take Home Pay', 'Take Home Pay/Annual']}
+            containerStyle={styles.buttonGroupContainer}
+          />
+          <Input
+            placeholder={placeholderDecider()}
+            inputContainerStyle={styles.inputContainer}
+          />
+        </View>
       </SafeAreaView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    backgroundColor: 'lightgray',
+    flex: 1,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  buttonGroupContainer: {
+    height: 50,
+    borderRadius: 10,
   },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  inputContainer: {
+    height: 30,
+    marginTop: 10,
+    borderRadius: 10,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingLeft: 10,
   },
 });
 
