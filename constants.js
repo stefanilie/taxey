@@ -15,4 +15,8 @@ export const NI_2021_MTH_UEL = 4167;
 export const NI_BASIC_RATE = 0.12;
 export const NI_UEL_RATE = 0.2;
 
+export const MTH_ALLOWANCE = 1002.95;
+export const MTH_BASIC_RATE = 3127.95;
+export const MTH_HIGHER_RATE = 5461.35;
+
 export const MARGIN = 10;

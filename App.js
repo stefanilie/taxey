@@ -25,6 +25,7 @@ import {
   NI_BASIC_RATE,
   ADDITIONAL_RATE,
   NI_UEL_RATE,
+  MTH_ALLOWANCE,
 } from './constants';
 import { hp, wp } from './utils';
 
@@ -79,7 +80,7 @@ const App: () => React$Node = () => {
     }
   };
 
-  const handleClickCompute = () => {
+  const annualToTHP = () => {
     const incomeTax = computeIncomeTax();
     const ni20 = computeNationalInsurance(NI_1920_MTH_ALLOWANCE);
     const ni21 = computeNationalInsurance(NI_2021_MTH_ALLOWANCE);
@@ -93,6 +94,32 @@ const App: () => React$Node = () => {
     });
     taxYear === 0 ? setComputedValue(valueFor20) : setComputedValue(valueFor21);
     setDisplayResults(true);
+  };
+
+  const thpToAnnual = () => {
+    let annualTHP = value * 12;
+    if (annualTHP > ALLOWANCE) {
+      let taxableBasicRate = annualTHP - ALLOWANCE;
+      annualTHP = taxableBasicRate * BASIC_RATE + taxableBasicRate + ALLOWANCE;
+
+      if (annualTHP > ALLOWANCE && annualTHP <= 50000) {
+        let taxableHigherRate = annualTHP - 50000;
+        annualTHP = taxableHigherRate * HIGHER_RATE + taxableBasicRate + 50000;
+
+        if(annualTHP > 50000 && annualTHP <= 150000) {
+          // TODO
+        }
+      }
+    }
+  };
+
+  const handleClickCompute = () => {
+    calculatorMode === 0 ? annualToTHP() : thpToAnnual();
+  };
+
+  const handleCalculatorModeSwitch = (calcMode) => {
+    setDisplayResults(false);
+    setCalculatorMode(calcMode);
   };
 
   const handleTaxYearSwitch = (taxYearSwitch) => {
@@ -112,7 +139,7 @@ const App: () => React$Node = () => {
         </Text>
         <View style={styles.container}>
           <ButtonGroup
-            onPress={setCalculatorMode}
+            onPress={handleCalculatorModeSwitch}
             selectedIndex={calculatorMode}
             buttons={['Annual/Take Home Pay', 'Take Home Pay/Annual']}
             containerStyle={styles.buttonGroupContainer}
@@ -144,9 +171,9 @@ const App: () => React$Node = () => {
                 selectedButtonStyle={styles.buttonGroupSelectedStyle}
               />
               <Text style={styles.header}>Your {placeholderDecider()}:</Text>
-              <Text style={styles.amount}>{computedValue}£</Text>
+              <Text style={styles.amount}>{computedValue} £</Text>
               <Text style={styles.monthly}>
-                Monthly: {(computedValue / 12).toFixed(2)}£
+                Monthly: {(computedValue / 12).toFixed(2)} £
               </Text>
             </View>
           )}
